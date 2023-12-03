@@ -18,6 +18,13 @@ public class HelloController {
     public String hello(@RequestBody String name){
         System.out.println("provider hello 服务者...");
 
+        try {
+            System.out.println("休眠中...");
+            Thread.sleep(4500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         // 业务处理;
 //        Map mapObj = JSONObject.parseObject(name, Map.class);
         String response = "OK ..................................... ";

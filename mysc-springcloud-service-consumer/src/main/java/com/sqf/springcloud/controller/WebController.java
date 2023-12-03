@@ -1,6 +1,7 @@
 package com.sqf.springcloud.controller;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.sqf.springcloud.pojo.UserDTO;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,6 @@ public class WebController {
 
     private String serviceName = "MYSC-SPRINGCLOUD-SERVICE-PROVIDER";
 
-    @HystrixCommand(fallbackMethod = "error")
     @RequestMapping(value = "/hello", method = RequestMethod.POST)
     public String hello (String name){
         HttpHeaders headers = new HttpHeaders();
@@ -65,6 +65,9 @@ public class WebController {
      * @param id
      * @return
      */
+    @HystrixCommand(fallbackMethod = "error", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000")
+    })
     @RequestMapping(value = "/user/{id}", method = RequestMethod.POST)
     public UserDTO user (@PathVariable("id") Long id){
         HttpHeaders headers = new HttpHeaders();
