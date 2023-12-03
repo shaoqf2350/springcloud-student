@@ -16,6 +16,11 @@ import org.springframework.web.client.RestTemplate;
 
 import com.alibaba.fastjson.JSONObject;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 /**
  * @Description:
  * @Author: shaoqingfeng
@@ -117,10 +122,18 @@ public class WebController {
      * @return
      */
     @RequestMapping(value = "/user/hystrix", method = RequestMethod.POST)
-    public String userHystrix (){
+    public String userHystrix () throws ExecutionException, InterruptedException, TimeoutException {
         System.out.println("begin 自定义熔断降级处理 .............");
 
         MyHystrixCommand myHystrixCommand = new MyHystrixCommand(com.netflix.hystrix.HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("")),restTemplate);
+
+        // 同步调用(该方法执行后,会等待远程的返回结果, 该方法才返回,然后代码继续往下执行)
+//        String msg = myHystrixCommand.execute();
+
+        // 异步调用(该方法执行后,不会马上有远程的返回结果,将来会有结果)
+        Future<String> future = myHystrixCommand.queue();
+        // 阻塞的方法,等待5秒,直到拿到结果或者直到超时
+        future.get(5000, TimeUnit.MILLISECONDS); // 等待时间
 
         return myHystrixCommand.execute();
     }
