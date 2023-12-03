@@ -1,7 +1,9 @@
 package com.sqf.springcloud.controller;
 
+import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import com.sqf.springcloud.hystrix.MyHystrixCommand;
 import com.sqf.springcloud.pojo.UserDTO;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +33,7 @@ public class WebController {
     @RequestMapping(value = "/hello", method = RequestMethod.POST)
     public String hello (String name){
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);// APPLICATION_JSON // APPLICATION_FORM_URLENCODED
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
         String url = "http://".concat(serviceName).concat("/service/hello");
 
@@ -62,10 +64,11 @@ public class WebController {
 
     /**
      * 服务提供者用RequestParam接受参数,报错: HttpClientErrorException$BadRequest： 400
+     * ignoreExceptions=Exception(RuntimeException运行时异常) // 忽略(异常不进入熔断方法)
      * @param id
      * @return
      */
-    @HystrixCommand(fallbackMethod = "error", commandProperties = {
+    @HystrixCommand(fallbackMethod = "methodName", ignoreExceptions=RuntimeException.class, commandProperties = {
             @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000")
     })
     @RequestMapping(value = "/user/{id}", method = RequestMethod.POST)
@@ -78,6 +81,8 @@ public class WebController {
         if (null == id) {
             return null;
         }
+
+        int i = 13/0;
 
         System.out.println("begin.............");
 
@@ -108,6 +113,19 @@ public class WebController {
     }
 
     /**
+     * 自定义熔断降级处理
+     * @return
+     */
+    @RequestMapping(value = "/user/hystrix", method = RequestMethod.POST)
+    public String userHystrix (){
+        System.out.println("begin 自定义熔断降级处理 .............");
+
+        MyHystrixCommand myHystrixCommand = new MyHystrixCommand(com.netflix.hystrix.HystrixCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("")),restTemplate);
+
+        return myHystrixCommand.execute();
+    }
+
+    /**
      * 传参
      * @param uid
      * @param uname
@@ -131,28 +149,22 @@ public class WebController {
         return "welcome";
     }
 
-    @RequestMapping("/web/order")
-    public String order (String name){
+    /**
+     * 熔断服务降级处理
+     * @param id
+     * @param throwable
+     * @return
+     */
+    public UserDTO methodName(Long id, Throwable throwable){
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(1L);
+        userDTO.setName("熔断");
+        userDTO.setPhone("110");
+        userDTO.setAge(0);
 
-        // 业务处理;
-
-        // 请求 URL
-        String url = "";
-
-        // 调用远程服务提供者的服务
-        HttpEntity<String> request = new HttpEntity(name);
-        ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
-
-        // 获取响应结果
-        HttpStatus statusCode = response.getStatusCode();
-        HttpHeaders headers = response.getHeaders();
-        String body = response.getBody();
-
-        System.out.println("statusCode:".concat(statusCode.toString()));
-        System.out.println("headers".concat(headers.toString()));
-
-        return body;
+        String msg = String.valueOf(id).concat(":服务员下班了, 触发熔断...");
+        System.out.println(msg);
+        System.out.println(throwable.getMessage());
+        return userDTO;
     }
-
-    public String error(String name){ return name.concat(":老板跑路了, 服务员离职了, 触发熔断保护..."); }
 }
