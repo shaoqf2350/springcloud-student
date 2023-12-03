@@ -8,7 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * @Description: 自定义Hystrix请求的服务异常熔断处理
+ * @Description: 自定义Hystrix请求的服务异常熔断降级处理
  * @Author: shaoqingfeng
  * @CREATE: 2023/12/3 20:41
  */
@@ -42,6 +42,6 @@ public class MyHystrixCommand extends HystrixCommand<String> {
     @Override
     public String getFallback(){
 
-        return "自定义熔断处理: 服务员下班了,请明天再来......";
+        return "自定义熔断降级处理: 服务员下班了,请明天再来......";
     }
 }
