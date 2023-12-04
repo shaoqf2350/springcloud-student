@@ -41,6 +41,11 @@ public class MyHystrixCommand extends HystrixCommand<String> {
      */
     @Override
     public String getFallback(){
+        //获取远程异常信息, run本身异常也会进入熔断降级,获取异常异常
+        Throwable throwable = super.getExecutionException();
+
+        System.out.println(throwable.getMessage());
+        System.out.println(throwable.getStackTrace());
 
         return "自定义熔断降级处理: 服务员下班了,请明天再来......";
     }

@@ -8,10 +8,10 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>mysc-springcloud-service-provider</artifactId>
-    <name>mysc-springcloud-service-provider</name>
+    <artifactId>springcloud-hystrix-dashboard</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <description>服务提供者</description>
+    <name>springcloud-hystrix-dashboard</name>
+    <description>Hystrix 仪表盘监控</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -31,22 +31,12 @@
             <scope>test</scope>
         </dependency>
 
+        <!--Hystrix-dashboard依赖-新版本 仪表盘起步-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <artifactId>spring-cloud-netflix-hystrix-dashboard</artifactId>
         </dependency>
 
-        <!-- lambda表达式 -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.12</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-        </dependency>
     </dependencies>
 
 </project>

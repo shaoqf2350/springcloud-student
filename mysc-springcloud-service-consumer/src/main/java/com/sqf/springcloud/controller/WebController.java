@@ -133,9 +133,9 @@ public class WebController {
         // 异步调用(该方法执行后,不会马上有远程的返回结果,将来会有结果)
         Future<String> future = myHystrixCommand.queue();
         // 阻塞的方法,等待5秒,直到拿到结果或者直到超时
-        future.get(5000, TimeUnit.MILLISECONDS); // 等待时间
+        String msg = future.get(5000, TimeUnit.MILLISECONDS); // 等待时间
 
-        return myHystrixCommand.execute();
+        return msg;
     }
 
     /**

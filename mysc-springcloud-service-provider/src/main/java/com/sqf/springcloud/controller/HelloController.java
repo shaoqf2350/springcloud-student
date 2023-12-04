@@ -18,8 +18,10 @@ public class HelloController {
     public String hello(@RequestBody String name){
         System.out.println("provider hello 服务者...");
 
+//        int i = 2/0; // 触发消费者熔断降级
+
         try {
-            System.out.println("休眠中...");
+            System.out.println("休眠中..."); // 触发消费者熔断降级
             Thread.sleep(4500);
         } catch (InterruptedException e) {
             e.printStackTrace();
