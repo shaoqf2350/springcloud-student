@@ -7,6 +7,7 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/springcloud-hystrix-dashboard/pom.xml" />
         <option value="$PROJECT_DIR$/mysc-springcloud-service-feign/pom.xml" />
+        <option value="$PROJECT_DIR$/mysc-springcloud-service-gateway/pom.xml" />
       </list>
     </option>
   </component>
