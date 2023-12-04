@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="mysc-springcloud-service-consumer" />
         <module name="mysc-springcloud-service-eureka" />
+        <module name="mysc-springcloud-service-feign" />
         <module name="mysc-springcloud-service-provider" />
         <module name="mysc-springcloud-service-provider-01" />
         <module name="springcloud-hystrix-dashboard" />
