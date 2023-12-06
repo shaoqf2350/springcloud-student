@@ -12,8 +12,13 @@
         <module name="mysc-springcloud-service-gateway" />
         <module name="mysc-springcloud-service-provider" />
         <module name="mysc-springcloud-service-provider-01" />
+        <module name="redis-springboot" />
         <module name="springcloud-hystrix-dashboard" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="redis-jedis-student" target="8" />
+      <module name="redis-springboot" target="1.5" />
+    </bytecodeTargetLevel>
   </component>
 </project>
